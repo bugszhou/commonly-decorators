@@ -22,16 +22,16 @@
     },
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "git@github.com:bugszhou/commonly-decorators.git"
     },
     "keywords": [
         "commonly-decorators"
     ],
     "license": "MIT",
     "bugs": {
-        "url": ""
+        "url": "https://github.com/bugszhou/commonly-decorators/issues"
     },
-    "homepage": "",
+    "homepage": "https://github.com/bugszhou/commonly-decorators/blob/main/README.md",
     "devDependencies": {
         "@rollup/plugin-commonjs": "^17.1.0",
         "@rollup/plugin-eslint": "^8.0.1",

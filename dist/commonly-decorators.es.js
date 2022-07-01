@@ -86,9 +86,9 @@ function freeze(maxTimeout) {
     };
 }
 
-var commonlyDecorators = {
+var index = {
     freeze: freeze,
 };
 
-export { commonlyDecorators as default, freeze };
+export { index as default, freeze };
 //# sourceMappingURL=commonly-decorators.es.js.map

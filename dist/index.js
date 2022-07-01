@@ -6,4 +6,4 @@ exports.freeze = freeze_1.default;
 exports.default = {
     freeze: freeze_1.default,
 };
-//# sourceMappingURL=commonly-decorators.js.map
+//# sourceMappingURL=index.js.map
