@@ -149,10 +149,56 @@ function Assemble(key, constructor, constructorArgs) {
         };
     };
 }
+function AssembleValue(key, value) {
+    return function closureFn(target, property) {
+        var fn = target[key];
+        if (typeof fn !== "function" && typeof (fn === null || fn === void 0 ? void 0 : fn.then) !== "function") {
+            target[key] = function newFn() {
+                return __awaiter(this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        try {
+                            this[property] = value;
+                        }
+                        catch (e) {
+                            console.error(e);
+                        }
+                        return [2 /*return*/];
+                    });
+                });
+            };
+            return;
+        }
+        target[key] = function newFn() {
+            var opts = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                opts[_i] = arguments[_i];
+            }
+            return __awaiter(this, void 0, void 0, function () {
+                var result, e_2;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            this[property] = value;
+                            return [4 /*yield*/, fn.apply(this, opts)];
+                        case 1:
+                            result = _a.sent();
+                            return [2 /*return*/, result];
+                        case 2:
+                            e_2 = _a.sent();
+                            throw e_2;
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+    };
+}
 
 var miniprogram = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    Assemble: Assemble
+    Assemble: Assemble,
+    AssembleValue: AssembleValue
 });
 
 var index = {
@@ -160,5 +206,5 @@ var index = {
     miniprogram: miniprogram,
 };
 
-export { Assemble, index as default, freeze };
+export { Assemble, AssembleValue, index as default, freeze };
 //# sourceMappingURL=commonly-decorators.es.js.map
