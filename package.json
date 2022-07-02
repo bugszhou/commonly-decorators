@@ -1,6 +1,6 @@
 {
     "name": "commonly-decorators",
-    "version": "0.1.0",
+    "version": "0.3.0",
     "description": "some commonly decorators",
     "author": "yiri.zhou",
     "main": "dist/commonly-decorators.min.js",
