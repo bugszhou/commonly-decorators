@@ -1,6 +1,6 @@
 import freezeClick from 'freeze-click';
 
-/*! *****************************************************************************
+/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -53,6 +53,16 @@ function __generator(thisArg, body) {
     }
 }
 
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+}
+
 function freeze(maxTimeout) {
     if (maxTimeout === void 0) { maxTimeout = 10000; }
     return function closureFn(target, property, descriptor) {
@@ -86,9 +96,69 @@ function freeze(maxTimeout) {
     };
 }
 
+function Assemble(key, constructor, constructorArgs) {
+    return function closureFn(target, property) {
+        var fn = target[key];
+        if (typeof fn !== "function" && typeof (fn === null || fn === void 0 ? void 0 : fn.then) !== "function") {
+            target[key] = function newFn() {
+                var opts = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    opts[_i] = arguments[_i];
+                }
+                return __awaiter(this, void 0, void 0, function () {
+                    var args;
+                    return __generator(this, function (_a) {
+                        try {
+                            args = (opts[0] ? constructorArgs === null || constructorArgs === void 0 ? void 0 : constructorArgs.map(function (item) { return opts[0][item]; }) : []) ||
+                                [];
+                            this[property] = new (constructor.bind.apply(constructor, __spreadArray([void 0], args, false)))();
+                        }
+                        catch (e) {
+                            console.error(e);
+                        }
+                        return [2 /*return*/];
+                    });
+                });
+            };
+            return;
+        }
+        target[key] = function newFn() {
+            var opts = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                opts[_i] = arguments[_i];
+            }
+            return __awaiter(this, void 0, void 0, function () {
+                var args, result, e_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            args = (opts[0] ? constructorArgs === null || constructorArgs === void 0 ? void 0 : constructorArgs.map(function (item) { return opts[0][item]; }) : []) || [];
+                            this[property] = new (constructor.bind.apply(constructor, __spreadArray([void 0], args, false)))();
+                            return [4 /*yield*/, fn.apply(this, opts)];
+                        case 1:
+                            result = _a.sent();
+                            return [2 /*return*/, result];
+                        case 2:
+                            e_1 = _a.sent();
+                            throw e_1;
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+    };
+}
+
+var miniprogram = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    Assemble: Assemble
+});
+
 var index = {
     freeze: freeze,
+    miniprogram: miniprogram,
 };
 
-export { index as default, freeze };
+export { Assemble, index as default, freeze };
 //# sourceMappingURL=commonly-decorators.es.js.map

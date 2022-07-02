@@ -14,13 +14,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.freeze = void 0;
-var freeze_1 = require("./lib/freeze");
-exports.freeze = freeze_1.default;
-var miniprogram = require("./lib/miniprogram");
-__exportStar(require("./lib/miniprogram"), exports);
-exports.default = {
-    freeze: freeze_1.default,
-    miniprogram: miniprogram,
-};
+__exportStar(require("./Assemble"), exports);
 //# sourceMappingURL=index.js.map
