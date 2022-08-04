@@ -217,15 +217,14 @@ function Required(errMsg, propertyPath) {
 function CheckParamRequired(target, property, propertyDescriptor) {
     var originalFn = propertyDescriptor.value;
     propertyDescriptor.value = function () {
-        var _a;
         var opts = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             opts[_i] = arguments[_i];
         }
         return __awaiter(this, void 0, void 0, function () {
             var requiredData, requiredInfo, index, propertyPath, propertyPaths, val, result;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         requiredData = target === null || target === void 0 ? void 0 : target.__requiredData;
                         requiredInfo = requiredData.get(property);
@@ -241,10 +240,7 @@ function CheckParamRequired(target, property, propertyDescriptor) {
                             }
                             return pre === null || pre === void 0 ? void 0 : pre[pathKey];
                         }, opts === null || opts === void 0 ? void 0 : opts[index]);
-                        if (val !== null && val !== void 0 ? val : true) {
-                            throw new TypeError((requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.errMsg) || "\u7B2C".concat(index + 1, "\u4E2A\u53C2\u6570\u5FC5\u4F20"));
-                        }
-                        if (!isNaN(index) && ((_a = opts === null || opts === void 0 ? void 0 : opts[index]) !== null && _a !== void 0 ? _a : true)) {
+                        if (!isNaN(index) && (typeof val === "undefined" || typeof val === null)) {
                             throw {
                                 status: "PARAM_ERROR",
                                 msg: (requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.errMsg) || "\u7B2C".concat(index + 1, "\u4E2A\u53C2\u6570\u5FC5\u4F20"),
@@ -254,7 +250,7 @@ function CheckParamRequired(target, property, propertyDescriptor) {
                         }
                         return [4 /*yield*/, originalFn.apply(this, opts)];
                     case 1:
-                        result = _b.sent();
+                        result = _a.sent();
                         return [2 /*return*/, result];
                 }
             });

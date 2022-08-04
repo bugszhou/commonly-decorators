@@ -1,4 +1,7 @@
-export function Required(errMsg: string, propertyPath = ""): ParameterDecorator {
+export function Required(
+  errMsg: string,
+  propertyPath = "",
+): ParameterDecorator {
   return function _required(
     target: any,
     property: string | symbol,
@@ -45,11 +48,7 @@ export function CheckParamRequired(
       return pre?.[pathKey];
     }, opts?.[index]);
 
-    if (val ?? true) {
-      throw new TypeError(requiredInfo?.errMsg || `第${index + 1}个参数必传`);
-    }
-
-    if (!isNaN(index) && (opts?.[index] ?? true)) {
+    if (!isNaN(index) && typeof val === "undefined") {
       throw {
         status: "PARAM_ERROR",
         msg: requiredInfo?.errMsg || `第${index + 1}个参数必传`,
