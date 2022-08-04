@@ -19,6 +19,7 @@ var freeze_1 = require("./lib/freeze");
 exports.freeze = freeze_1.default;
 var miniprogram = require("./lib/miniprogram");
 __exportStar(require("./lib/miniprogram"), exports);
+__exportStar(require("./lib/common"), exports);
 exports.default = {
     freeze: freeze_1.default,
     miniprogram: miniprogram,
