@@ -234,6 +234,7 @@ var ParameterDecoratorError = /** @class */ (function (_super) {
     __extends(ParameterDecoratorError, _super);
     function ParameterDecoratorError(msg) {
         var _this = _super.call(this, msg) || this;
+        _this.__id = "ParameterDecoratorError";
         _this.status = "PARAM_ERROR";
         _this.data = null;
         _this.from = "CheckParamRequired";
@@ -259,9 +260,8 @@ var ParameterDecoratorError = /** @class */ (function (_super) {
     };
     ParameterDecoratorError.isParameterDecoratorError = function (obj) {
         return (obj instanceof ParameterDecoratorError ||
-            (obj === null || obj === void 0 ? void 0 : obj.__id) === ParameterDecoratorError.__id);
+            (obj === null || obj === void 0 ? void 0 : obj.__id) === new ParameterDecoratorError("").__id);
     };
-    ParameterDecoratorError.__id = "ParameterDecoratorError";
     return ParameterDecoratorError;
 }(Error));
 function CheckParamRequired(target, property, propertyDescriptor) {

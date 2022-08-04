@@ -1,6 +1,6 @@
 export declare function Required(errMsg: string, propertyPath?: string): ParameterDecorator;
 export declare class ParameterDecoratorError extends Error {
-    static __id: string;
+    __id: string;
     private status;
     private data;
     private from;

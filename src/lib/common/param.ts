@@ -19,7 +19,7 @@ export function Required(
 }
 
 export class ParameterDecoratorError extends Error {
-  static __id = "ParameterDecoratorError";
+  __id = "ParameterDecoratorError";
 
   private status = "PARAM_ERROR";
 
@@ -58,7 +58,7 @@ export class ParameterDecoratorError extends Error {
   static isParameterDecoratorError(obj: any) {
     return (
       obj instanceof ParameterDecoratorError ||
-      obj?.__id === ParameterDecoratorError.__id
+      obj?.__id === new ParameterDecoratorError("").__id
     );
   }
 }
