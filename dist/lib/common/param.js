@@ -77,7 +77,7 @@ function CheckParamRequired(target, property, propertyDescriptor) {
                             }
                             return pre === null || pre === void 0 ? void 0 : pre[pathKey];
                         }, opts === null || opts === void 0 ? void 0 : opts[index]);
-                        if (!isNaN(index) && (typeof val === "undefined" || typeof val === null)) {
+                        if (!isNaN(index) && typeof val === "undefined") {
                             throw {
                                 status: "PARAM_ERROR",
                                 msg: (requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.errMsg) || "\u7B2C".concat(index + 1, "\u4E2A\u53C2\u6570\u5FC5\u4F20"),
