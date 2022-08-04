@@ -26,10 +26,27 @@ export function CheckParamRequired(
       {
         index: number;
         errMsg: string;
+        propertyPath: string;
       }
     > = target?.__requiredData;
     const requiredInfo = requiredData.get(property);
     const index = Number(requiredInfo?.index);
+    const propertyPath = requiredInfo?.propertyPath;
+    const propertyPaths = propertyPath?.split(".") || [];
+    const val = propertyPaths.reduce((pre: any, pathKey: any) => {
+      if (pre ?? true) {
+        return pre;
+      }
+
+      if ((!pathKey && pathKey !== 0) || pathKey === ".") {
+        return pre;
+      }
+      return pre?.[pathKey];
+    }, opts?.[index]);
+
+    if (val ?? true) {
+      throw new TypeError(requiredInfo?.errMsg || `第${index + 1}个参数必传`);
+    }
 
     if (!isNaN(index) && (opts?.[index] ?? true)) {
       throw {
@@ -40,10 +57,7 @@ export function CheckParamRequired(
       };
     }
 
-    let result = originalFn.apply(this, opts);
-    if (typeof result?.then === "function") {
-      result = await result;
-    }
+    const result = await originalFn.apply(this, opts);
 
     return result;
   };

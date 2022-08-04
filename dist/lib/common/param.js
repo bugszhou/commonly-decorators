@@ -58,13 +58,27 @@ function CheckParamRequired(target, property, propertyDescriptor) {
             opts[_i] = arguments[_i];
         }
         return __awaiter(this, void 0, void 0, function () {
-            var requiredData, requiredInfo, index, result;
+            var requiredData, requiredInfo, index, propertyPath, propertyPaths, val, result;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         requiredData = target === null || target === void 0 ? void 0 : target.__requiredData;
                         requiredInfo = requiredData.get(property);
                         index = Number(requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.index);
+                        propertyPath = requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.propertyPath;
+                        propertyPaths = (propertyPath === null || propertyPath === void 0 ? void 0 : propertyPath.split(".")) || [];
+                        val = propertyPaths.reduce(function (pre, pathKey) {
+                            if (pre !== null && pre !== void 0 ? pre : true) {
+                                return pre;
+                            }
+                            if ((!pathKey && pathKey !== 0) || pathKey === ".") {
+                                return pre;
+                            }
+                            return pre === null || pre === void 0 ? void 0 : pre[pathKey];
+                        }, opts === null || opts === void 0 ? void 0 : opts[index]);
+                        if (val !== null && val !== void 0 ? val : true) {
+                            throw new TypeError((requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.errMsg) || "\u7B2C".concat(index + 1, "\u4E2A\u53C2\u6570\u5FC5\u4F20"));
+                        }
                         if (!isNaN(index) && ((_a = opts === null || opts === void 0 ? void 0 : opts[index]) !== null && _a !== void 0 ? _a : true)) {
                             throw {
                                 status: "PARAM_ERROR",
@@ -73,13 +87,10 @@ function CheckParamRequired(target, property, propertyDescriptor) {
                                 from: "CheckParamRequired",
                             };
                         }
-                        result = originalFn.apply(this, opts);
-                        if (!(typeof (result === null || result === void 0 ? void 0 : result.then) === "function")) return [3 /*break*/, 2];
-                        return [4 /*yield*/, result];
+                        return [4 /*yield*/, originalFn.apply(this, opts)];
                     case 1:
                         result = _b.sent();
-                        _b.label = 2;
-                    case 2: return [2 /*return*/, result];
+                        return [2 /*return*/, result];
                 }
             });
         });
