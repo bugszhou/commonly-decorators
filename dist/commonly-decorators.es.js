@@ -232,7 +232,7 @@ function CheckParamRequired(target, property, propertyDescriptor) {
                         propertyPath = requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.propertyPath;
                         propertyPaths = (propertyPath === null || propertyPath === void 0 ? void 0 : propertyPath.split(".")) || [];
                         val = propertyPaths.reduce(function (pre, pathKey) {
-                            if (pre !== null && pre !== void 0 ? pre : true) {
+                            if (typeof pre === "undefined" || pre === null) {
                                 return pre;
                             }
                             if ((!pathKey && pathKey !== 0) || pathKey === ".") {
@@ -240,7 +240,8 @@ function CheckParamRequired(target, property, propertyDescriptor) {
                             }
                             return pre === null || pre === void 0 ? void 0 : pre[pathKey];
                         }, opts === null || opts === void 0 ? void 0 : opts[index]);
-                        if (!isNaN(index) && typeof val === "undefined") {
+                        if (!isNaN(index) &&
+                            (typeof val === "undefined" || val === "" || val === null)) {
                             throw {
                                 status: "PARAM_ERROR",
                                 msg: (requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.errMsg) || "\u7B2C".concat(index + 1, "\u4E2A\u53C2\u6570\u5FC5\u4F20"),

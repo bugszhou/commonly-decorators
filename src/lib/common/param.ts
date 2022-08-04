@@ -24,7 +24,7 @@ export function CheckParamRequired(
   propertyDescriptor: PropertyDescriptor,
 ) {
   const originalFn = propertyDescriptor.value;
-  propertyDescriptor.value = async function (...opts: any[]) {
+  propertyDescriptor.value = async function(...opts: any[]) {
     const requiredData: Map<
       string,
       {
@@ -38,7 +38,7 @@ export function CheckParamRequired(
     const propertyPath = requiredInfo?.propertyPath;
     const propertyPaths = propertyPath?.split(".") || [];
     const val = propertyPaths.reduce((pre: any, pathKey: any) => {
-      if (pre ?? true) {
+      if (typeof pre === "undefined" || pre === null) {
         return pre;
       }
 
@@ -48,7 +48,10 @@ export function CheckParamRequired(
       return pre?.[pathKey];
     }, opts?.[index]);
 
-    if (!isNaN(index) && typeof val === "undefined") {
+    if (
+      !isNaN(index) &&
+      (typeof val === "undefined" || val === "" || val === null)
+    ) {
       throw {
         status: "PARAM_ERROR",
         msg: requiredInfo?.errMsg || `第${index + 1}个参数必传`,
