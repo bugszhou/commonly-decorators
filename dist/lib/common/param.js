@@ -1,4 +1,19 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,7 +51,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CheckParamRequired = exports.Required = void 0;
+exports.CheckParamRequired = exports.ParameterDecoratorError = exports.Required = void 0;
 function Required(errMsg, propertyPath) {
     if (propertyPath === void 0) { propertyPath = ""; }
     return function _required(target, property, parameterIndex) {
@@ -51,6 +66,41 @@ function Required(errMsg, propertyPath) {
     };
 }
 exports.Required = Required;
+var ParameterDecoratorError = /** @class */ (function (_super) {
+    __extends(ParameterDecoratorError, _super);
+    function ParameterDecoratorError(msg) {
+        var _this = _super.call(this, msg) || this;
+        _this.status = "PARAM_ERROR";
+        _this.data = null;
+        _this.from = "CheckParamRequired";
+        return _this;
+    }
+    ParameterDecoratorError.prototype.setData = function (val) {
+        this.data = val;
+    };
+    ParameterDecoratorError.prototype.getData = function () {
+        return this.data;
+    };
+    ParameterDecoratorError.prototype.setStatus = function (status) {
+        this.status = status;
+    };
+    ParameterDecoratorError.prototype.getStatus = function () {
+        return this.status;
+    };
+    ParameterDecoratorError.prototype.setFrom = function (from) {
+        this.from = from;
+    };
+    ParameterDecoratorError.prototype.getFrom = function () {
+        return this.from;
+    };
+    ParameterDecoratorError.isParameterDecoratorError = function (obj) {
+        return (obj instanceof ParameterDecoratorError ||
+            (obj === null || obj === void 0 ? void 0 : obj.__id) === ParameterDecoratorError.__id);
+    };
+    ParameterDecoratorError.__id = "ParameterDecoratorError";
+    return ParameterDecoratorError;
+}(Error));
+exports.ParameterDecoratorError = ParameterDecoratorError;
 function CheckParamRequired(target, property, propertyDescriptor) {
     var originalFn = propertyDescriptor.value;
     propertyDescriptor.value = function () {
@@ -79,12 +129,7 @@ function CheckParamRequired(target, property, propertyDescriptor) {
                         }, opts === null || opts === void 0 ? void 0 : opts[index]);
                         if (!isNaN(index) &&
                             (typeof val === "undefined" || val === "" || val === null)) {
-                            throw {
-                                status: "PARAM_ERROR",
-                                msg: (requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.errMsg) || "\u7B2C".concat(index + 1, "\u4E2A\u53C2\u6570\u5FC5\u4F20"),
-                                data: null,
-                                from: "CheckParamRequired",
-                            };
+                            throw new ParameterDecoratorError((requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.errMsg) || "\u7B2C".concat(index + 1, "\u4E2A\u53C2\u6570\u5FC5\u4F20"));
                         }
                         return [4 /*yield*/, originalFn.apply(this, opts)];
                     case 1:
@@ -99,5 +144,6 @@ exports.CheckParamRequired = CheckParamRequired;
 exports.default = {
     Required: Required,
     CheckParamRequired: CheckParamRequired,
+    ParameterDecoratorError: ParameterDecoratorError,
 };
 //# sourceMappingURL=param.js.map
