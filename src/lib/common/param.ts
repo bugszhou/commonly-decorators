@@ -1,4 +1,4 @@
-export function Required(errMsg: string): ParameterDecorator {
+export function Required(errMsg: string, propertyPath = ""): ParameterDecorator {
   return function _required(
     target: any,
     property: string | symbol,
@@ -10,6 +10,7 @@ export function Required(errMsg: string): ParameterDecorator {
     target.__requiredData.set(property, {
       index: parameterIndex,
       errMsg,
+      propertyPath,
     });
   };
 }

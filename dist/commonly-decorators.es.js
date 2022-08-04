@@ -201,7 +201,8 @@ var miniprogram = /*#__PURE__*/Object.freeze({
     AssembleValue: AssembleValue
 });
 
-function Required(errMsg) {
+function Required(errMsg, propertyPath) {
+    if (propertyPath === void 0) { propertyPath = ""; }
     return function _required(target, property, parameterIndex) {
         if (!(target === null || target === void 0 ? void 0 : target.__requiredData)) {
             target.__requiredData = new Map();
@@ -209,6 +210,7 @@ function Required(errMsg) {
         target.__requiredData.set(property, {
             index: parameterIndex,
             errMsg: errMsg,
+            propertyPath: propertyPath,
         });
     };
 }
