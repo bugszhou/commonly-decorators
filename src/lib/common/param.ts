@@ -15,6 +15,47 @@ export function Required(
       errMsg,
       propertyPath,
     });
+    if (!property) {
+      return;
+    }
+    const originalFn = target[property];
+    target[property] = async function (...opts: any[]) {
+      const requiredData: Map<
+        string,
+        {
+          index: number;
+          errMsg: string;
+          propertyPath: string;
+        }
+      > = target?.__requiredData;
+      const requiredInfo = requiredData.get(property as string);
+      const index = Number(requiredInfo?.index);
+      const propertyPath = requiredInfo?.propertyPath;
+      const propertyPaths = propertyPath?.split(".") || [];
+      const val = propertyPaths.reduce((pre: any, pathKey: any) => {
+        if (typeof pre === "undefined" || pre === null) {
+          return pre;
+        }
+  
+        if ((!pathKey && pathKey !== 0) || pathKey === ".") {
+          return pre;
+        }
+        return pre?.[pathKey];
+      }, opts?.[index]);
+  
+      if (
+        !isNaN(index) &&
+        (typeof val === "undefined" || val === "" || val === null)
+      ) {
+        throw new ParameterDecoratorError(
+          requiredInfo?.errMsg || `第${index + 1}个参数必传`,
+        );
+      }
+  
+      const result = await originalFn.apply(this, opts);
+  
+      return result;
+    };
   };
 }
 
