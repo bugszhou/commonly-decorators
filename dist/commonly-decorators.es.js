@@ -228,46 +228,6 @@ function Required(errMsg, propertyPath) {
             errMsg: errMsg,
             propertyPath: propertyPath,
         });
-        if (!property) {
-            return;
-        }
-        var originalFn = target[property];
-        target[property] = function () {
-            var opts = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                opts[_i] = arguments[_i];
-            }
-            return __awaiter(this, void 0, void 0, function () {
-                var requiredData, requiredInfo, index, propertyPath, propertyPaths, val, result;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0:
-                            requiredData = target === null || target === void 0 ? void 0 : target.__requiredData;
-                            requiredInfo = requiredData.get(property);
-                            index = Number(requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.index);
-                            propertyPath = requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.propertyPath;
-                            propertyPaths = (propertyPath === null || propertyPath === void 0 ? void 0 : propertyPath.split(".")) || [];
-                            val = propertyPaths.reduce(function (pre, pathKey) {
-                                if (typeof pre === "undefined" || pre === null) {
-                                    return pre;
-                                }
-                                if ((!pathKey && pathKey !== 0) || pathKey === ".") {
-                                    return pre;
-                                }
-                                return pre === null || pre === void 0 ? void 0 : pre[pathKey];
-                            }, opts === null || opts === void 0 ? void 0 : opts[index]);
-                            if (!isNaN(index) &&
-                                (typeof val === "undefined" || val === "" || val === null)) {
-                                throw new ParameterDecoratorError((requiredInfo === null || requiredInfo === void 0 ? void 0 : requiredInfo.errMsg) || "\u7B2C".concat(index + 1, "\u4E2A\u53C2\u6570\u5FC5\u4F20"));
-                            }
-                            return [4 /*yield*/, originalFn.apply(this, opts)];
-                        case 1:
-                            result = _a.sent();
-                            return [2 /*return*/, result];
-                    }
-                });
-            });
-        };
     };
 }
 var ParameterDecoratorError = /** @class */ (function (_super) {
