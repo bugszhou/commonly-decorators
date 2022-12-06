@@ -54,27 +54,31 @@ function Polling(intervalTime, pollingId) {
             if (!Array.isArray(this[pollingId])) {
                 this[pollingId] = [this[pollingId]];
             }
-            return new Promise(function (resolve) {
-                var timer = setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                    var result;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, originFn.apply(this, opts)];
-                            case 1:
-                                result = _a.sent();
-                                if (return_data_1.default.isOk(result)) {
-                                    resolve(result);
-                                    return [2 /*return*/];
-                                }
-                                this[pollingId] = this[pollingId].filter(function (item) { return item !== timer; });
-                                clearTimeout(timer);
-                                fn.apply(this, opts);
+            return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
+                var result, timer;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, originFn.apply(this, opts)];
+                        case 1:
+                            result = _a.sent();
+                            if (return_data_1.default.isOk(result)) {
+                                resolve(result);
                                 return [2 /*return*/];
-                        }
-                    });
-                }); }, intervalTime);
-                _this[pollingId].push(timer);
-            });
+                            }
+                            timer = setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    this[pollingId] = this[pollingId].filter(function (item) { return item !== timer; });
+                                    clearTimeout(timer);
+                                    fn.apply(this, opts);
+                                    return [2 /*return*/];
+                                });
+                            }); }, intervalTime);
+                            this[pollingId].push(timer);
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
         };
         var originOnUnload = target.onUnload;
         target.onUnload = function newOnUnload() {

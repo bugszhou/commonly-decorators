@@ -20,14 +20,14 @@ export default function Polling(
         this[pollingId] = [this[pollingId]];
       }
 
-      return new Promise((resolve) => {
-        const timer = setTimeout(async () => {
-          const result = await originFn.apply(this, opts);
-          if (ReturnData.isOk(result)) {
-            resolve(result);
-            return;
-          }
+      return new Promise(async (resolve) => {
+        const result = await originFn.apply(this, opts);
+        if (ReturnData.isOk(result)) {
+          resolve(result);
+          return;
+        }
 
+        const timer = setTimeout(async () => {
           this[pollingId] = this[pollingId].filter(
             (item: ReturnType<typeof setTimeout>) => item !== timer,
           );
