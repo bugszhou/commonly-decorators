@@ -41,7 +41,7 @@ export default function Polling(
 
     const originOnUnload = target.onUnload;
     target.onUnload = async function newOnUnload(...opts: any[]) {
-      this[pollingId].forEach((item: ReturnType<typeof setTimeout>) => {
+      this?.[pollingId]?.forEach((item: ReturnType<typeof setTimeout>) => {
         clearTimeout(item);
       });
       this[pollingId] = null;
@@ -49,4 +49,11 @@ export default function Polling(
       return result;
     };
   };
+}
+
+export function PollingClear(content: any, pollingId = "__polling__") {
+  content?.[pollingId]?.forEach((item: ReturnType<typeof setTimeout>) => {
+    clearTimeout(item);
+  });
+  content[pollingId] = null;
 }

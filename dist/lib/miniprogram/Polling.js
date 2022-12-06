@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PollingClear = void 0;
 var return_data_1 = require("return-data");
 function Polling(intervalTime, pollingId) {
     if (intervalTime === void 0) { intervalTime = 1000; }
@@ -82,22 +83,23 @@ function Polling(intervalTime, pollingId) {
         };
         var originOnUnload = target.onUnload;
         target.onUnload = function newOnUnload() {
+            var _a;
             var opts = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 opts[_i] = arguments[_i];
             }
             return __awaiter(this, void 0, void 0, function () {
                 var result;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
                         case 0:
-                            this[pollingId].forEach(function (item) {
+                            (_a = this === null || this === void 0 ? void 0 : this[pollingId]) === null || _a === void 0 ? void 0 : _a.forEach(function (item) {
                                 clearTimeout(item);
                             });
                             this[pollingId] = null;
                             return [4 /*yield*/, originOnUnload.apply(this, opts)];
                         case 1:
-                            result = _a.sent();
+                            result = _b.sent();
                             return [2 /*return*/, result];
                     }
                 });
@@ -106,4 +108,13 @@ function Polling(intervalTime, pollingId) {
     };
 }
 exports.default = Polling;
+function PollingClear(content, pollingId) {
+    var _a;
+    if (pollingId === void 0) { pollingId = "__polling__"; }
+    (_a = content === null || content === void 0 ? void 0 : content[pollingId]) === null || _a === void 0 ? void 0 : _a.forEach(function (item) {
+        clearTimeout(item);
+    });
+    content[pollingId] = null;
+}
+exports.PollingClear = PollingClear;
 //# sourceMappingURL=Polling.js.map

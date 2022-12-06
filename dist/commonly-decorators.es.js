@@ -438,22 +438,23 @@ function Polling(intervalTime, pollingId) {
         };
         var originOnUnload = target.onUnload;
         target.onUnload = function newOnUnload() {
+            var _a;
             var opts = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 opts[_i] = arguments[_i];
             }
             return __awaiter(this, void 0, void 0, function () {
                 var result;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
                         case 0:
-                            this[pollingId].forEach(function (item) {
+                            (_a = this === null || this === void 0 ? void 0 : this[pollingId]) === null || _a === void 0 ? void 0 : _a.forEach(function (item) {
                                 clearTimeout(item);
                             });
                             this[pollingId] = null;
                             return [4 /*yield*/, originOnUnload.apply(this, opts)];
                         case 1:
-                            result = _a.sent();
+                            result = _b.sent();
                             return [2 /*return*/, result];
                     }
                 });
@@ -461,12 +462,21 @@ function Polling(intervalTime, pollingId) {
         };
     };
 }
+function PollingClear(content, pollingId) {
+    var _a;
+    if (pollingId === void 0) { pollingId = "__polling__"; }
+    (_a = content === null || content === void 0 ? void 0 : content[pollingId]) === null || _a === void 0 ? void 0 : _a.forEach(function (item) {
+        clearTimeout(item);
+    });
+    content[pollingId] = null;
+}
 
 var miniprogram = /*#__PURE__*/Object.freeze({
     __proto__: null,
     Polling: Polling,
     Assemble: Assemble,
-    AssembleValue: AssembleValue
+    AssembleValue: AssembleValue,
+    PollingClear: PollingClear
 });
 
 function Required(errMsg, propertyPath) {
@@ -566,5 +576,5 @@ var index = {
     miniprogram: miniprogram,
 };
 
-export { Assemble, AssembleValue, param as ParamDecorator, Polling, index as default, freeze };
+export { Assemble, AssembleValue, param as ParamDecorator, Polling, PollingClear, index as default, freeze };
 //# sourceMappingURL=commonly-decorators.es.js.map
