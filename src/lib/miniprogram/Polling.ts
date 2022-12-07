@@ -12,12 +12,16 @@ export default function Polling(
     const originFn = descriptor.value;
 
     descriptor.value = function fn(this: any, ...opts: any[]) {
-      if (!this[pollingId]) {
-        this[pollingId] = [];
+      if (!this.__polling__list__) {
+        this.__polling__list__ = Object.create(null);
       }
 
-      if (!Array.isArray(this[pollingId])) {
-        this[pollingId] = [this[pollingId]];
+      if (!this.__polling__list__[pollingId]) {
+        this.__polling__list__[pollingId] = [];
+      }
+
+      if (!Array.isArray(this.__polling__list__[pollingId])) {
+        this.__polling__list__[pollingId] = [this.__polling__list__[pollingId]];
       }
 
       return new Promise(async (resolve) => {
@@ -28,23 +32,25 @@ export default function Polling(
         }
 
         const timer = setTimeout(async () => {
-          this[pollingId] = this[pollingId].filter(
-            (item: ReturnType<typeof setTimeout>) => item !== timer,
-          );
+          this.__polling__list__[pollingId] = this.__polling__list__[
+            pollingId
+          ].filter((item: ReturnType<typeof setTimeout>) => item !== timer);
           clearTimeout(timer);
           fn.apply(this, opts);
         }, intervalTime);
 
-        this[pollingId].push(timer);
+        this.__polling__list__[pollingId].push(timer);
       });
     };
 
     const originOnUnload = target.onUnload;
     target.onUnload = async function newOnUnload(...opts: any[]) {
-      this?.[pollingId]?.forEach((item: ReturnType<typeof setTimeout>) => {
-        clearTimeout(item);
-      });
-      this[pollingId] = null;
+      this?.__polling__list__?.[pollingId]?.forEach(
+        (item: ReturnType<typeof setTimeout>) => {
+          clearTimeout(item);
+        },
+      );
+      this.__polling__list__[pollingId] = null;
       const result = await originOnUnload.apply(this, opts);
       return result;
     };
@@ -52,8 +58,31 @@ export default function Polling(
 }
 
 export function PollingClear(content: any, pollingId = "__polling__") {
-  content?.[pollingId]?.forEach((item: ReturnType<typeof setTimeout>) => {
-    clearTimeout(item);
-  });
-  content[pollingId] = null;
+  try {
+    content.__polling__list__?.[pollingId]?.forEach(
+      (item: ReturnType<typeof setTimeout>) => {
+        clearTimeout(item);
+      },
+    );
+    content.__polling__list__[pollingId] = null;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export function PollingClearAll(content: any) {
+  try {
+    Object.keys(content?.__polling__list__ || {}).forEach((pollingId) => {
+      content?.__polling__list__?.[pollingId]?.forEach(
+        (item: ReturnType<typeof setTimeout>) => {
+          clearTimeout(item);
+        },
+      );
+
+      clearTimeout(content?.__polling__list__?.[pollingId]);
+      content.__polling__list__[pollingId] = null;
+    });
+  } catch (e) {
+    console.error(e);
+  }
 }

@@ -404,11 +404,14 @@ function Polling(intervalTime, pollingId) {
             for (var _i = 0; _i < arguments.length; _i++) {
                 opts[_i] = arguments[_i];
             }
-            if (!this[pollingId]) {
-                this[pollingId] = [];
+            if (!this.__polling__list__) {
+                this.__polling__list__ = Object.create(null);
             }
-            if (!Array.isArray(this[pollingId])) {
-                this[pollingId] = [this[pollingId]];
+            if (!this.__polling__list__[pollingId]) {
+                this.__polling__list__[pollingId] = [];
+            }
+            if (!Array.isArray(this.__polling__list__[pollingId])) {
+                this.__polling__list__[pollingId] = [this.__polling__list__[pollingId]];
             }
             return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
                 var result, timer;
@@ -424,13 +427,13 @@ function Polling(intervalTime, pollingId) {
                             }
                             timer = setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
-                                    this[pollingId] = this[pollingId].filter(function (item) { return item !== timer; });
+                                    this.__polling__list__[pollingId] = this.__polling__list__[pollingId].filter(function (item) { return item !== timer; });
                                     clearTimeout(timer);
                                     fn.apply(this, opts);
                                     return [2 /*return*/];
                                 });
                             }); }, intervalTime);
-                            this[pollingId].push(timer);
+                            this.__polling__list__[pollingId].push(timer);
                             return [2 /*return*/];
                     }
                 });
@@ -438,23 +441,23 @@ function Polling(intervalTime, pollingId) {
         };
         var originOnUnload = target.onUnload;
         target.onUnload = function newOnUnload() {
-            var _a;
+            var _a, _b;
             var opts = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 opts[_i] = arguments[_i];
             }
             return __awaiter(this, void 0, void 0, function () {
                 var result;
-                return __generator(this, function (_b) {
-                    switch (_b.label) {
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
                         case 0:
-                            (_a = this === null || this === void 0 ? void 0 : this[pollingId]) === null || _a === void 0 ? void 0 : _a.forEach(function (item) {
+                            (_b = (_a = this === null || this === void 0 ? void 0 : this.__polling__list__) === null || _a === void 0 ? void 0 : _a[pollingId]) === null || _b === void 0 ? void 0 : _b.forEach(function (item) {
                                 clearTimeout(item);
                             });
-                            this[pollingId] = null;
+                            this.__polling__list__[pollingId] = null;
                             return [4 /*yield*/, originOnUnload.apply(this, opts)];
                         case 1:
-                            result = _b.sent();
+                            result = _c.sent();
                             return [2 /*return*/, result];
                     }
                 });
@@ -463,12 +466,32 @@ function Polling(intervalTime, pollingId) {
     };
 }
 function PollingClear(content, pollingId) {
-    var _a;
+    var _a, _b;
     if (pollingId === void 0) { pollingId = "__polling__"; }
-    (_a = content === null || content === void 0 ? void 0 : content[pollingId]) === null || _a === void 0 ? void 0 : _a.forEach(function (item) {
-        clearTimeout(item);
-    });
-    content[pollingId] = null;
+    try {
+        (_b = (_a = content.__polling__list__) === null || _a === void 0 ? void 0 : _a[pollingId]) === null || _b === void 0 ? void 0 : _b.forEach(function (item) {
+            clearTimeout(item);
+        });
+        content.__polling__list__[pollingId] = null;
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
+function PollingClearAll(content) {
+    try {
+        Object.keys((content === null || content === void 0 ? void 0 : content.__polling__list__) || {}).forEach(function (pollingId) {
+            var _a, _b, _c;
+            (_b = (_a = content === null || content === void 0 ? void 0 : content.__polling__list__) === null || _a === void 0 ? void 0 : _a[pollingId]) === null || _b === void 0 ? void 0 : _b.forEach(function (item) {
+                clearTimeout(item);
+            });
+            clearTimeout((_c = content === null || content === void 0 ? void 0 : content.__polling__list__) === null || _c === void 0 ? void 0 : _c[pollingId]);
+            content.__polling__list__[pollingId] = null;
+        });
+    }
+    catch (e) {
+        console.error(e);
+    }
 }
 
 var miniprogram = /*#__PURE__*/Object.freeze({
@@ -476,7 +499,8 @@ var miniprogram = /*#__PURE__*/Object.freeze({
     Polling: Polling,
     Assemble: Assemble,
     AssembleValue: AssembleValue,
-    PollingClear: PollingClear
+    PollingClear: PollingClear,
+    PollingClearAll: PollingClearAll
 });
 
 function Required(errMsg, propertyPath) {
@@ -576,5 +600,5 @@ var index = {
     miniprogram: miniprogram,
 };
 
-export { Assemble, AssembleValue, param as ParamDecorator, Polling, PollingClear, index as default, freeze };
+export { Assemble, AssembleValue, param as ParamDecorator, Polling, PollingClear, PollingClearAll, index as default, freeze };
 //# sourceMappingURL=commonly-decorators.es.js.map
