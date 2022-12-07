@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PollingClearAll = exports.PollingClear = void 0;
+exports.PollingClearAllDeco = exports.PollingClearAll = exports.PollingClear = void 0;
 var return_data_1 = require("return-data");
 function Polling(intervalTime, pollingId) {
     if (intervalTime === void 0) { intervalTime = 1000; }
@@ -71,8 +71,9 @@ function Polling(intervalTime, pollingId) {
                                 return [2 /*return*/];
                             }
                             timer = setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    this.__polling__list__[pollingId] = this.__polling__list__[pollingId].filter(function (item) { return item !== timer; });
+                                var _a, _b;
+                                return __generator(this, function (_c) {
+                                    this.__polling__list__[pollingId] = (_b = (_a = this.__polling__list__) === null || _a === void 0 ? void 0 : _a[pollingId]) === null || _b === void 0 ? void 0 : _b.filter(function (item) { return item !== timer; });
                                     clearTimeout(timer);
                                     fn.apply(this, opts);
                                     return [2 /*return*/];
@@ -141,4 +142,28 @@ function PollingClearAll(content) {
     }
 }
 exports.PollingClearAll = PollingClearAll;
+function PollingClearAllDeco() {
+    return function closurePollingClearAllDeco(target, property, descriptor) {
+        var originFn = descriptor.value;
+        descriptor.value = function fn() {
+            var _this = this;
+            var opts = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                opts[_i] = arguments[_i];
+            }
+            var originResult = originFn.apply(this, opts);
+            if (typeof originResult === "object" &&
+                typeof (originResult === null || originResult === void 0 ? void 0 : originResult.then) === "function") {
+                return originResult.then(function () {
+                    PollingClearAll(_this);
+                }, function () {
+                    PollingClearAll(_this);
+                });
+            }
+            PollingClearAll(this);
+            return originResult;
+        };
+    };
+}
+exports.PollingClearAllDeco = PollingClearAllDeco;
 //# sourceMappingURL=Polling.js.map

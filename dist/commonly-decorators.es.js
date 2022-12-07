@@ -426,8 +426,9 @@ function Polling(intervalTime, pollingId) {
                                 return [2 /*return*/];
                             }
                             timer = setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-                                return __generator(this, function (_a) {
-                                    this.__polling__list__[pollingId] = this.__polling__list__[pollingId].filter(function (item) { return item !== timer; });
+                                var _a, _b;
+                                return __generator(this, function (_c) {
+                                    this.__polling__list__[pollingId] = (_b = (_a = this.__polling__list__) === null || _a === void 0 ? void 0 : _a[pollingId]) === null || _b === void 0 ? void 0 : _b.filter(function (item) { return item !== timer; });
                                     clearTimeout(timer);
                                     fn.apply(this, opts);
                                     return [2 /*return*/];
@@ -493,6 +494,29 @@ function PollingClearAll(content) {
         console.error(e);
     }
 }
+function PollingClearAllDeco() {
+    return function closurePollingClearAllDeco(target, property, descriptor) {
+        var originFn = descriptor.value;
+        descriptor.value = function fn() {
+            var _this = this;
+            var opts = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                opts[_i] = arguments[_i];
+            }
+            var originResult = originFn.apply(this, opts);
+            if (typeof originResult === "object" &&
+                typeof (originResult === null || originResult === void 0 ? void 0 : originResult.then) === "function") {
+                return originResult.then(function () {
+                    PollingClearAll(_this);
+                }, function () {
+                    PollingClearAll(_this);
+                });
+            }
+            PollingClearAll(this);
+            return originResult;
+        };
+    };
+}
 
 var miniprogram = /*#__PURE__*/Object.freeze({
     __proto__: null,
@@ -500,7 +524,8 @@ var miniprogram = /*#__PURE__*/Object.freeze({
     Assemble: Assemble,
     AssembleValue: AssembleValue,
     PollingClear: PollingClear,
-    PollingClearAll: PollingClearAll
+    PollingClearAll: PollingClearAll,
+    PollingClearAllDeco: PollingClearAllDeco
 });
 
 function Required(errMsg, propertyPath) {
@@ -600,5 +625,5 @@ var index = {
     miniprogram: miniprogram,
 };
 
-export { Assemble, AssembleValue, param as ParamDecorator, Polling, PollingClear, PollingClearAll, index as default, freeze };
+export { Assemble, AssembleValue, param as ParamDecorator, Polling, PollingClear, PollingClearAll, PollingClearAllDeco, index as default, freeze };
 //# sourceMappingURL=commonly-decorators.es.js.map

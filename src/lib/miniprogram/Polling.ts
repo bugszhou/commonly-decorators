@@ -32,9 +32,9 @@ export default function Polling(
         }
 
         const timer = setTimeout(async () => {
-          this.__polling__list__[pollingId] = this.__polling__list__[
+          this.__polling__list__[pollingId] = this.__polling__list__?.[
             pollingId
-          ].filter((item: ReturnType<typeof setTimeout>) => item !== timer);
+          ]?.filter((item: ReturnType<typeof setTimeout>) => item !== timer);
           clearTimeout(timer);
           fn.apply(this, opts);
         }, intervalTime);
@@ -85,4 +85,36 @@ export function PollingClearAll(content: any) {
   } catch (e) {
     console.error(e);
   }
+}
+
+export function PollingClearAllDeco() {
+  return function closurePollingClearAllDeco(
+    target: any,
+    property: string,
+    descriptor: PropertyDescriptor,
+  ) {
+    const originFn = descriptor.value;
+
+    descriptor.value = function fn(this: any, ...opts: any[]) {
+      const originResult = originFn.apply(this, opts);
+
+      if (
+        typeof originResult === "object" &&
+        typeof originResult?.then === "function"
+      ) {
+        return originResult.then(
+          () => {
+            PollingClearAll(this);
+          },
+          () => {
+            PollingClearAll(this);
+          },
+        );
+      }
+
+      PollingClearAll(this);
+
+      return originResult;
+    };
+  };
 }
