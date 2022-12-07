@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PollingClearAllDeco = exports.PollingClearAll = exports.PollingClear = void 0;
+exports.PollingClearAllDeco = exports.pollingClearAll = exports.pollingClear = void 0;
 var return_data_1 = require("return-data");
 function Polling(intervalTime, pollingId) {
     if (intervalTime === void 0) { intervalTime = 1000; }
@@ -112,7 +112,7 @@ function Polling(intervalTime, pollingId) {
     };
 }
 exports.default = Polling;
-function PollingClear(content, pollingId) {
+function pollingClear(content, pollingId) {
     var _a, _b;
     if (pollingId === void 0) { pollingId = "__polling__"; }
     try {
@@ -125,8 +125,8 @@ function PollingClear(content, pollingId) {
         console.error(e);
     }
 }
-exports.PollingClear = PollingClear;
-function PollingClearAll(content) {
+exports.pollingClear = pollingClear;
+function pollingClearAll(content) {
     try {
         Object.keys((content === null || content === void 0 ? void 0 : content.__polling__list__) || {}).forEach(function (pollingId) {
             var _a, _b, _c;
@@ -141,7 +141,7 @@ function PollingClearAll(content) {
         console.error(e);
     }
 }
-exports.PollingClearAll = PollingClearAll;
+exports.pollingClearAll = pollingClearAll;
 function PollingClearAllDeco() {
     return function closurePollingClearAllDeco(target, property, descriptor) {
         var originFn = descriptor.value;
@@ -155,12 +155,12 @@ function PollingClearAllDeco() {
             if (typeof originResult === "object" &&
                 typeof (originResult === null || originResult === void 0 ? void 0 : originResult.then) === "function") {
                 return originResult.then(function () {
-                    PollingClearAll(_this);
+                    pollingClearAll(_this);
                 }, function () {
-                    PollingClearAll(_this);
+                    pollingClearAll(_this);
                 });
             }
-            PollingClearAll(this);
+            pollingClearAll(this);
             return originResult;
         };
     };

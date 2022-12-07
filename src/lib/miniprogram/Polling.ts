@@ -57,7 +57,7 @@ export default function Polling(
   };
 }
 
-export function PollingClear(content: any, pollingId = "__polling__") {
+export function pollingClear(content: any, pollingId = "__polling__") {
   try {
     content.__polling__list__?.[pollingId]?.forEach(
       (item: ReturnType<typeof setTimeout>) => {
@@ -70,7 +70,7 @@ export function PollingClear(content: any, pollingId = "__polling__") {
   }
 }
 
-export function PollingClearAll(content: any) {
+export function pollingClearAll(content: any) {
   try {
     Object.keys(content?.__polling__list__ || {}).forEach((pollingId) => {
       content?.__polling__list__?.[pollingId]?.forEach(
@@ -104,15 +104,15 @@ export function PollingClearAllDeco() {
       ) {
         return originResult.then(
           () => {
-            PollingClearAll(this);
+            pollingClearAll(this);
           },
           () => {
-            PollingClearAll(this);
+            pollingClearAll(this);
           },
         );
       }
 
-      PollingClearAll(this);
+      pollingClearAll(this);
 
       return originResult;
     };
