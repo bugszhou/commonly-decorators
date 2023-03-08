@@ -466,6 +466,81 @@ function Polling(intervalTime, pollingId) {
         };
     };
 }
+function PollingAfter(intervalTime, pollingId) {
+    if (intervalTime === void 0) { intervalTime = 1000; }
+    if (pollingId === void 0) { pollingId = "__polling__"; }
+    return function closurePolling(target, property, descriptor) {
+        var originFn = descriptor.value;
+        descriptor.value = function fn() {
+            var _this = this;
+            var opts = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                opts[_i] = arguments[_i];
+            }
+            if (!this.__polling__list__) {
+                this.__polling__list__ = Object.create(null);
+            }
+            if (!this.__polling__list__[pollingId]) {
+                this.__polling__list__[pollingId] = [];
+            }
+            if (!Array.isArray(this.__polling__list__[pollingId])) {
+                this.__polling__list__[pollingId] = [this.__polling__list__[pollingId]];
+            }
+            return new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
+                var timer;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    timer = setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                        var result;
+                        var _a, _b;
+                        return __generator(this, function (_c) {
+                            switch (_c.label) {
+                                case 0:
+                                    this.__polling__list__[pollingId] = (_b = (_a = this.__polling__list__) === null || _a === void 0 ? void 0 : _a[pollingId]) === null || _b === void 0 ? void 0 : _b.filter(function (item) { return item !== timer; });
+                                    clearTimeout(timer);
+                                    return [4 /*yield*/, originFn.apply(this, opts)];
+                                case 1:
+                                    result = _c.sent();
+                                    if (ReturnData.isOk(result)) {
+                                        resolve(result);
+                                        return [2 /*return*/];
+                                    }
+                                    fn.apply(this, opts);
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, intervalTime);
+                    this.__polling__list__[pollingId].push(timer);
+                    return [2 /*return*/];
+                });
+            }); });
+        };
+        var originOnUnload = target.onUnload;
+        target.onUnload = function newOnUnload() {
+            var _a, _b;
+            var opts = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                opts[_i] = arguments[_i];
+            }
+            return __awaiter(this, void 0, void 0, function () {
+                var result;
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
+                        case 0:
+                            (_b = (_a = this === null || this === void 0 ? void 0 : this.__polling__list__) === null || _a === void 0 ? void 0 : _a[pollingId]) === null || _b === void 0 ? void 0 : _b.forEach(function (item) {
+                                clearTimeout(item);
+                            });
+                            this.__polling__list__[pollingId] = null;
+                            return [4 /*yield*/, originOnUnload.apply(this, opts)];
+                        case 1:
+                            result = _c.sent();
+                            return [2 /*return*/, result];
+                    }
+                });
+            });
+        };
+    };
+}
 function pollingClear(content, pollingId) {
     var _a, _b;
     if (pollingId === void 0) { pollingId = "__polling__"; }
@@ -523,6 +598,7 @@ var miniprogram = /*#__PURE__*/Object.freeze({
     Polling: Polling,
     Assemble: Assemble,
     AssembleValue: AssembleValue,
+    PollingAfter: PollingAfter,
     pollingClear: pollingClear,
     pollingClearAll: pollingClearAll,
     PollingClearAllDeco: PollingClearAllDeco
@@ -625,5 +701,5 @@ var index = {
     miniprogram: miniprogram,
 };
 
-export { Assemble, AssembleValue, param as ParamDecorator, Polling, PollingClearAllDeco, index as default, freeze, pollingClear, pollingClearAll };
+export { Assemble, AssembleValue, param as ParamDecorator, Polling, PollingAfter, PollingClearAllDeco, index as default, freeze, pollingClear, pollingClearAll };
 //# sourceMappingURL=commonly-decorators.es.js.map
