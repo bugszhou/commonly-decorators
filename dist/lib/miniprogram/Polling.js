@@ -161,25 +161,25 @@ function PollingAfter(intervalTime, pollingId) {
                 });
             }); });
         };
-        var originOnUnload = target.onUnload;
+        var originOnUnload = target === null || target === void 0 ? void 0 : target.onUnload;
         target.onUnload = function newOnUnload() {
-            var _a, _b;
+            var _a, _b, _c;
             var opts = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 opts[_i] = arguments[_i];
             }
             return __awaiter(this, void 0, void 0, function () {
                 var result;
-                return __generator(this, function (_c) {
-                    switch (_c.label) {
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
                         case 0:
                             (_b = (_a = this === null || this === void 0 ? void 0 : this.__polling__list__) === null || _a === void 0 ? void 0 : _a[pollingId]) === null || _b === void 0 ? void 0 : _b.forEach(function (item) {
                                 clearTimeout(item);
                             });
                             this.__polling__list__[pollingId] = null;
-                            return [4 /*yield*/, originOnUnload.apply(this, opts)];
+                            return [4 /*yield*/, ((_c = originOnUnload === null || originOnUnload === void 0 ? void 0 : originOnUnload.apply) === null || _c === void 0 ? void 0 : _c.call(originOnUnload, this, opts))];
                         case 1:
-                            result = _c.sent();
+                            result = _d.sent();
                             return [2 /*return*/, result];
                     }
                 });

@@ -98,7 +98,7 @@ export function PollingAfter(intervalTime = 1000, pollingId = "__polling__") {
       });
     };
 
-    const originOnUnload = target.onUnload;
+    const originOnUnload = target?.onUnload;
     target.onUnload = async function newOnUnload(...opts: any[]) {
       this?.__polling__list__?.[pollingId]?.forEach(
         (item: ReturnType<typeof setTimeout>) => {
@@ -106,7 +106,7 @@ export function PollingAfter(intervalTime = 1000, pollingId = "__polling__") {
         },
       );
       this.__polling__list__[pollingId] = null;
-      const result = await originOnUnload.apply(this, opts);
+      const result = await originOnUnload?.apply?.(this, opts);
       return result;
     };
   };
