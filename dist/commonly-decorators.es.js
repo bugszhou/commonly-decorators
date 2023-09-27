@@ -517,23 +517,25 @@ function PollingAfter(intervalTime, pollingId) {
         };
         var originOnUnload = target === null || target === void 0 ? void 0 : target.onUnload;
         target.onUnload = function newOnUnload() {
-            var _a, _b, _c;
+            var _a, _b, _c, _d;
             var opts = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 opts[_i] = arguments[_i];
             }
             return __awaiter(this, void 0, void 0, function () {
                 var result;
-                return __generator(this, function (_d) {
-                    switch (_d.label) {
+                return __generator(this, function (_e) {
+                    switch (_e.label) {
                         case 0:
                             (_b = (_a = this === null || this === void 0 ? void 0 : this.__polling__list__) === null || _a === void 0 ? void 0 : _a[pollingId]) === null || _b === void 0 ? void 0 : _b.forEach(function (item) {
                                 clearTimeout(item);
                             });
-                            this.__polling__list__[pollingId] = null;
-                            return [4 /*yield*/, ((_c = originOnUnload === null || originOnUnload === void 0 ? void 0 : originOnUnload.apply) === null || _c === void 0 ? void 0 : _c.call(originOnUnload, this, opts))];
+                            if ((_c = this === null || this === void 0 ? void 0 : this.__polling__list__) === null || _c === void 0 ? void 0 : _c[pollingId]) {
+                                this.__polling__list__[pollingId] = null;
+                            }
+                            return [4 /*yield*/, ((_d = originOnUnload === null || originOnUnload === void 0 ? void 0 : originOnUnload.apply) === null || _d === void 0 ? void 0 : _d.call(originOnUnload, this, opts))];
                         case 1:
-                            result = _d.sent();
+                            result = _e.sent();
                             return [2 /*return*/, result];
                     }
                 });

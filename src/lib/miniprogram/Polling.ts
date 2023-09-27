@@ -105,7 +105,11 @@ export function PollingAfter(intervalTime = 1000, pollingId = "__polling__") {
           clearTimeout(item);
         },
       );
-      this.__polling__list__[pollingId] = null;
+
+      if (this?.__polling__list__?.[pollingId]) {
+        this.__polling__list__[pollingId] = null;
+      }
+      
       const result = await originOnUnload?.apply?.(this, opts);
       return result;
     };
