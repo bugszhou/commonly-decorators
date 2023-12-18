@@ -51,7 +51,7 @@ export default function Polling(
         },
       );
       this.__polling__list__[pollingId] = null;
-      const result = await originOnUnload.apply(this, opts);
+      const result = await originOnUnload?.apply?.(this, opts);
       return result;
     };
   };
